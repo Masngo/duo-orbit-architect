@@ -1,0 +1,5 @@
+CREATE TABLE users (
+    id INT PRIMARY KEY,
+    username VARCHAR(100),
+    password_hash TEXT
+);
