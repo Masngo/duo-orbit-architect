@@ -1,5 +1,8 @@
 CREATE TABLE users (
-    id INT PRIMARY KEY,
-    username VARCHAR(100),
-    password_hash TEXT
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username VARCHAR(100) UNIQUE NOT NULL,
+    password_hash TEXT NOT NULL,
+    role VARCHAR(50) DEFAULT 'developer',
+    is_active BOOLEAN DEFAULT 1,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
