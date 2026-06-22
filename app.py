@@ -1,6 +1,7 @@
 import streamlit as st
 from risk_dashboard import calculate_risk
 from dependency_graph import build_graph
+from risk_scenarios import generate_risk_report
 
 st.title("🚀 Duo Orbit Architect")
 
@@ -40,3 +41,29 @@ elif level == "MEDIUM":
 
 else:
     st.success("Safe to merge with minor checks")
+    st.subheader("Example Risk Reports")
+
+scenario = st.selectbox(
+    "Choose Scenario",
+    ["low", "medium", "high"]
+)
+
+report = generate_risk_report(scenario)
+
+st.metric("Risk Score", f"{report['risk_score']}/100")
+st.metric("Risk Level", report["risk_level"])
+
+st.write("### Analysis Summary")
+st.write(report["summary"])
+
+st.write("### Recommendation")
+st.success(report["recommendation"])
+
+st.write("### Details")
+
+st.write(
+    f"""
+    - Files Changed: {report['files_changed']}
+    - Services Impacted: {report['services_impacted']}
+    """
+)
