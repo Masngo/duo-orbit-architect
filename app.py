@@ -1,19 +1,71 @@
+```python
 import streamlit as st
 from risk_dashboard import calculate_risk
 from dependency_graph import build_graph
 from risk_scenarios import generate_risk_report
 
+# ---------------------------------------------------
+# PAGE CONFIG
+# ---------------------------------------------------
+
+st.set_page_config(
+    page_title="Duo Orbit Architect",
+    page_icon="🚀",
+    layout="wide"
+)
+
+# ---------------------------------------------------
+# HEADER
+# ---------------------------------------------------
+
 st.title("🚀 Duo Orbit Architect")
+st.caption(
+    "Blast-Radius AI Engine powered by GitLab Orbit, "
+    "Knowledge Graph Intelligence, and Risk Scoring"
+)
 
-st.subheader("Merge Request Risk Analyzer")
+# ---------------------------------------------------
+# MERGE REQUEST ANALYZER
+# ---------------------------------------------------
 
-# Inputs (simulate MR changes)
-dependency_depth = st.slider("Dependency Depth", 0, 50, 20)
-critical_services = st.slider("Critical Services Affected", 0, 50, 15)
-files_changed = st.slider("Files Changed", 0, 30, 10)
-test_gap = st.slider("Test Coverage Gap", 0, 30, 10)
+st.header("🔍 Merge Request Risk Analyzer")
 
-# Risk calculation
+col1, col2 = st.columns(2)
+
+with col1:
+    dependency_depth = st.slider(
+        "Dependency Depth",
+        0,
+        100,
+        20
+    )
+
+    critical_services = st.slider(
+        "Critical Services Affected",
+        0,
+        100,
+        15
+    )
+
+with col2:
+    files_changed = st.slider(
+        "Files Changed",
+        0,
+        30,
+        10
+    )
+
+    test_gap = st.slider(
+        "Test Coverage Gap",
+        0,
+        100,
+        10
+    )
+
+# ---------------------------------------------------
+# RISK CALCULATION
+# ---------------------------------------------------
+
 score, level = calculate_risk(
     dependency_depth,
     critical_services,
@@ -21,49 +73,126 @@ score, level = calculate_risk(
     test_gap
 )
 
-st.metric("Risk Score", f"{score:.1f}")
-st.metric("Risk Level", level)
+metric1, metric2 = st.columns(2)
 
-# Graph visualization
-st.subheader("Dependency Graph")
+with metric1:
+    st.metric("Risk Score", f"{score:.1f}/100")
+
+with metric2:
+    st.metric("Risk Level", level)
+
+# ---------------------------------------------------
+# DEPENDENCY GRAPH
+# ---------------------------------------------------
+
+st.header("🕸 Dependency Graph")
+
 graph_path = build_graph()
-st.image(graph_path)
 
-# Recommendations
-st.subheader("Recommendations")
+st.image(
+    graph_path,
+    caption="Repository Dependency Analysis"
+)
+
+# ---------------------------------------------------
+# RECOMMENDATIONS
+# ---------------------------------------------------
+
+st.header("📋 Recommendations")
 
 if level == "HIGH":
-    st.error("⚠ Add integration tests before merging")
-    st.warning("Review authentication and session flows carefully")
+
+    st.error(
+        "⚠ High blast-radius detected."
+    )
+
+    st.warning(
+        "Review authentication, session, and downstream services."
+    )
+
+    st.warning(
+        "Add integration and regression tests before merging."
+    )
 
 elif level == "MEDIUM":
-    st.warning("Improve test coverage before merging")
+
+    st.warning(
+        "Moderate architectural impact detected."
+    )
+
+    st.info(
+        "Improve test coverage and verify affected services."
+    )
 
 else:
-    st.success("Safe to merge with minor checks")
-    st.subheader("Example Risk Reports")
+
+    st.success(
+        "Low risk merge request."
+    )
+
+    st.success(
+        "Safe to merge after standard review."
+    )
+
+# ---------------------------------------------------
+# EXAMPLE RISK REPORTS
+# ---------------------------------------------------
+
+st.header("📊 Example Risk Reports")
 
 scenario = st.selectbox(
-    "Choose Scenario",
+    "Choose Example Scenario",
     ["low", "medium", "high"]
 )
 
 report = generate_risk_report(scenario)
 
-st.metric("Risk Score", f"{report['risk_score']}/100")
-st.metric("Risk Level", report["risk_level"])
+col3, col4 = st.columns(2)
 
-st.write("### Analysis Summary")
+with col3:
+    st.metric(
+        "Scenario Risk Score",
+        f"{report['risk_score']}/100"
+    )
+
+with col4:
+    st.metric(
+        "Scenario Risk Level",
+        report["risk_level"]
+    )
+
+st.subheader("Analysis Summary")
 st.write(report["summary"])
 
-st.write("### Recommendation")
-st.success(report["recommendation"])
+st.subheader("Recommendation")
 
-st.write("### Details")
+if report["risk_level"] == "HIGH":
+    st.error(report["recommendation"])
+
+elif report["risk_level"] == "MEDIUM":
+    st.warning(report["recommendation"])
+
+else:
+    st.success(report["recommendation"])
+
+st.subheader("Scenario Details")
 
 st.write(
     f"""
-    - Files Changed: {report['files_changed']}
-    - Services Impacted: {report['services_impacted']}
+    **Files Changed:** {report['files_changed']}
+
+    **Services Impacted:** {report['services_impacted']}
     """
 )
+
+# ---------------------------------------------------
+# FOOTER
+# ---------------------------------------------------
+
+st.divider()
+
+st.caption(
+    "Built with GitLab Duo Agent Platform, GitLab Orbit, "
+    "Knowledge Graph, Python, Streamlit, and MCP."
+)
+```
