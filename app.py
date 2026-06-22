@@ -1,4 +1,4 @@
-```python
+
 import streamlit as st
 from risk_dashboard import calculate_risk
 from dependency_graph import build_graph
@@ -195,4 +195,3 @@ st.caption(
     "Built with GitLab Duo Agent Platform, GitLab Orbit, "
     "Knowledge Graph, Python, Streamlit, and MCP."
 )
-```
